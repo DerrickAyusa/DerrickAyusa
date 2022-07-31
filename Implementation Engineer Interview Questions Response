@@ -1,0 +1,16 @@
+#Implementation Engineer Interview Questions Response
+## Question I
+
+##Question 3
+
+I have encounted two types of Encryption methods while learning Python which are 
+
+- Symmetric Encryption
+  -Symmetric encryption is when the same key is used for encryption. An example of script to use to achieve this is:
+  
+-Assymmetric Encryption
+  - Assymetric Encription is when two different keys are used for the encryption and decryption processes.
+    One of the keys is known as the private key and the other is known as the public key.
+    The private key is kept secret by the owner and the public key is either shared amongst authorised recipients. 
+    This is done in order to reduce the risk of data being acccessed by unauthorised parties. An example of script to use to achieve this is:
+
