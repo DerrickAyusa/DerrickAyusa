@@ -1,6 +1,4 @@
 #Implementation Engineer Interview Questions Response
-## Question I
-
 ##Question 3
 
 I have encounted two types of Encryption methods while learning Python which are 
@@ -91,3 +89,110 @@ with open('test.txt', "rb") as f:
                 label=None
             )))
 # >>> read_data = [b'age', b'Date of birth']
+
+##Section B Question 1
+
+I started by running this commands
+> cd onedrive\desktop\
+> mkdir django_auth
+> cd django_auth
+> python -m venv .venv
+> .venv\Scripts\Activate.ps1
+(.venv) > python -m pip install django~=4.0.0
+(.venv) > django-admin startproject django_project .
+(.venv) > python manage.py migrate
+(.venv) > python manage.py runserver
+ 
+ To use the auth app I needed to add it to the project-level urls.py file.
+ from django.contrib import admin
+from django.urls import path, include # new
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")),  # new
+]
+
+I then proceeded to create the login page.
+I started by creating a new directory called templates and within it another directory called registration.
+(.venv) > mkdir templates
+(.venv) > mkdir templates/registration
+
+Then I created a templates/registration/login.html file with a text editor and added the following code to the file
+<h2>Log In</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+</form>
+I did this to mainly prevent a CSRF Attack. 
+
+Then I added this code to redirect the user upon login.
+# django_project/settings.py
+LOGIN_REDIRECT_URL = "/"
+
+Then I created a user by making a superuser account
+(.venv) > python manage.py createsuperuser
+Username: (was left blank to use user)
+Email address: derrick@gmail.com
+Password:1111
+Password (again):1111
+
+Then I created a homepage by adding two new files with my text editor.
+(.venv) $ touch templates/base.html
+(.venv) $ touch templates/home.html
+
+I added this code to the base file using a text editor
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+</head>
+<body>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>
+
+Then i added this code to the home file
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
+
+
+ I also updated login.html too to extend our new base.html file:
+ {% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Log In</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+</form>
+{% endblock %}
+
+I updated our urls.py file so you can display the homepage:
+ django_project/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from django.views.generic.base import TemplateView # new
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'), # new
+]
